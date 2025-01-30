@@ -3,6 +3,7 @@ import { useRealtimeAuction } from "../lib/useRealtimeAuction";
 import PlayerCard from "./PlayerCard";
 import { Card, CardContent } from "../components/card";
 import { getPlayersByTeam } from "../lib/get_team_squad"; // Import the function
+import PlayerTable from "./PlayerTable";
 
 const AuctionDashboard = () => {
     const { players, teams } = useRealtimeAuction();
@@ -55,7 +56,10 @@ const AuctionDashboard = () => {
                 </Card>
             </div>
 
+
             {/* Teams Section */}
+            <h1 className="text-3xl font-bold text-center">Teams</h1>
+            <h1 className="text-center mb-4">Click to view the squad</h1>
             <div className="flex flex-wrap gap-4 justify-center">
                 {teams.map((team) => (
                     <div
@@ -74,17 +78,11 @@ const AuctionDashboard = () => {
                 ))}
             </div>
 
-            {/* Players Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                {players.map((player) => (
-                    <PlayerCard key={player.id} player={player} />
-                ))}
-            </div>
 
             {/* Modal for displaying players bought by the team */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-xl w-1/2">
+                    <div className="bg-gray-900/50 backdrop-blur-md  p-6 rounded-xl w-1/2">
                         <h2 className="text-xl font-semibold mb-4">
                             Players Bought by {teamPlayers[0]?.sold_to_team?.team_name || "Team"}
                         </h2>
@@ -102,6 +100,8 @@ const AuctionDashboard = () => {
                     </div>
                 </div>
             )}
+
+            <PlayerTable />
         </div>
     );
 };
