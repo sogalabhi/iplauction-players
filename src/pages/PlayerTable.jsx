@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRealtimeAuction } from "../lib/useRealtimeAuction"; // Reuse your hook
+import { formatPriceInLakhs } from "../lib/lakhstocr";
 
 const PlayerTable = () => {
     const { players } = useRealtimeAuction();  // Get the real-time players' data
@@ -59,7 +60,7 @@ const PlayerTable = () => {
                     value={playersPerPage}
                     onChange={handlePlayersPerPageChange}
                 >
-                    {[5, 10, 15, 20].map((num) => (
+                    {[15, 20, 50, 100].map((num) => (
                         <option key={num} value={num}>
                             {num}
                         </option>
@@ -141,15 +142,15 @@ const PlayerTable = () => {
                 <tbody>
                     {currentPlayers.map((player) => (
                         <tr key={player.id}>
-                            <td className="px-4 py-2"><img src={player.player_image} alt="" className="w-40" /></td>
+                            <td className="px-4 py-2"><img src={player.player_image} alt="" className="h-40 mx-auto" /></td>
                             <td className="px-4 py-2">{player.player_name}</td>
                             <td className="px-4 py-2">{player.sold_to_team}</td>
                             <td className="px-4 py-2">{player.runs}</td>
                             <td className="px-4 py-2">{player.wickets}</td>
                             <td className="px-4 py-2">{player.bat_avg}</td>
                             <td className="px-4 py-2">{player.bowl_avg}</td>
-                            <td className="px-4 py-2">{player.base_price}</td>
-                            <td className="px-4 py-2">{player.final_price}</td>
+                            <td className="px-4 py-2">{formatPriceInLakhs(player.base_price)}</td>
+                            <td className="px-4 py-2">{formatPriceInLakhs(player.final_price)}</td>
                             <td className="px-4 py-2">{player.catches}</td>
                             <td className="px-4 py-2">{player.stumpings}</td>
                         </tr>

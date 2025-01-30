@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { supabase } from "./supabase"; 
+import { supabase } from "./supabase";
 
 export const useRealtimeAuction = () => {
     const [players, setPlayers] = useState([]);
     const [teams, setTeams] = useState([]);
+    const [teamLogos, setTeamLogos] = useState({});
 
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -11,7 +12,6 @@ export const useRealtimeAuction = () => {
                 .from("CricketPlayers")
                 .select("*")
                 .order("time_of_selling", { ascending: true });
-
             const { data: teamsData, error: teamsError } = await supabase.from("Teams").select("*");
 
             if (playersError) console.error("Error fetching players:", playersError);
@@ -19,34 +19,34 @@ export const useRealtimeAuction = () => {
 
             setPlayers(playersData || []);
             setTeams(teamsData || []);
+
+            // Create a map of team ID to logo
+            const teamLogoMap = teamsData.reduce((map, team) => {
+                map[team.id] = team.team_logo;
+                return map;
+            }, {});
+
+            setTeamLogos(teamLogoMap);
         };
 
         fetchInitialData();
 
-        // Realtime Subscription for Players Table (Only Listen for Changes)
+        // Realtime Subscription for Players Table
         const playerSubscription = supabase
             .channel("realtime:CricketPlayers")
-            .on(
-                "postgres_changes",
-                { event: "*", schema: "public", table: "CricketPlayers" },
-                (payload) => {
-                    console.log("Player data changed:", payload);
-                    fetchInitialData(); // Re-fetch to reflect latest data
-                }
-            )
+            .on("postgres_changes", { event: "*", schema: "public", table: "CricketPlayers" }, (payload) => {
+                console.log("Player data changed:", payload);
+                fetchInitialData(); // Re-fetch to reflect latest data
+            })
             .subscribe();
 
-        // Realtime Subscription for Teams Table (Only Listen for Changes)
+        // Realtime Subscription for Teams Table
         const teamSubscription = supabase
             .channel("realtime:Teams")
-            .on(
-                "postgres_changes",
-                { event: "*", schema: "public", table: "Teams" },
-                (payload) => {
-                    console.log("Team data changed:", payload);
-                    fetchInitialData(); // Re-fetch to reflect latest data
-                }
-            )
+            .on("postgres_changes", { event: "*", schema: "public", table: "Teams" }, (payload) => {
+                console.log("Team data changed:", payload);
+                fetchInitialData(); // Re-fetch to reflect latest data
+            })
             .subscribe();
 
         return () => {
@@ -55,5 +55,5 @@ export const useRealtimeAuction = () => {
         };
     }, []);
 
-    return { players, teams };
+    return { players, teams, teamLogos };
 };
