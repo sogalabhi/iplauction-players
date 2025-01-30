@@ -5,6 +5,7 @@ import { Card, CardContent } from "../components/card";
 import { getPlayersByTeam } from "../lib/get_team_squad"; // Import the function
 import PlayerTable from "./PlayerTable";
 import { formatPriceInLakhs } from "../lib/lakhstocr"; // Import the function
+
 const AuctionDashboard = () => {
     const { players, teams, teamLogos } = useRealtimeAuction();
     const [teamPlayers, setTeamPlayers] = useState([]);
@@ -22,23 +23,52 @@ const AuctionDashboard = () => {
         setTeamPlayers(playersBought);
         setShowModal(true);
     };
+
+    function refreshPage() {
+        window.location.reload();
+    }
+
     const getTeamLogo = (teamId) => teamLogos[teamId] || "";
     var team_colors = ['740622', '101dc3', '545978', 'd0062f', 'e54e6a', '32323f', '2f9cbd', '35c2c6', 'eb5c03', 'FCCC10'];
+
     return (
         <div className="p-6 bg-gray-900 min-h-screen text-white">
-            <h1 className="text-3xl font-bold text-center mb-4">🏏 IPL Mock Auction</h1>
+            <button type="button" className="absolute top-1 left-10" onClick={refreshPage}> <span>Reload</span> </button>
+            <img src="https://ecell.nitk.ac.in/navLogo.png" alt="" className="w-20 lg:w-40 absolute z-40 top-10 left-4" />
+            <img src="https://ecell.nitk.ac.in/incub8L.png" alt="" className="w-20 lg:w-32 absolute z-40 top-8 right-4" />
+            <h1 className="text-center md:text-5xl pt-2 relative z-10 heading-font" style={{ textShadow: "4px 4px 0px #4f829c" }}>IPL MOCK AUCTION</h1>
+            <h2 className="text-center text-lg pt-4">Sponsored by</h2>
+            <div className="flex justify-center items-center gap-4 mt-2 flex-wrap">
+                <img src="https://ecellnitk.netlify.app/sponsors/sponsor13.png" className="bg-white p-2 h-10 rounded-full hover:scale-105 transition" alt="" />
+                <div className="w-24 h-10 overflow-hidden rounded-full bg-white flex items-center justify-center">
+                    <img
+                        src="https://ecellnitk.netlify.app/sponsors/sponsor7.png"
+                        className="h-8 w-full object-cover transition-transform duration-300 hover:scale-110"
+                        alt="Sponsor Logo"
+                    />
+                </div>
+                <div className="w-24 h-10 p-2 overflow-hidden rounded-full bg-white flex items-center justify-center">
+                    <img
+                        src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcScjLrrFN2bwj-z-AsXUtrzZnR4_OI-3w-XkNC0ngVPsLUrdyCy"
+                        className="h-8 w-full object-cover transition-transform duration-300 hover:scale-110"
+                        alt="Sponsor Logo"
+                    />
+                </div>
+                <img src="https://ecellnitk.netlify.app/sponsors/sponsor14.png" className="bg-white p-2 h-10 rounded-full hover:scale-105 transition" alt="" />
+                <img src="https://ecellnitk.netlify.app/sponsors/sponsor1.png" className="bg-white p-2 h-10 rounded-full hover:scale-105 transition" alt="" />
+            </div>
             {/* Highlights Section */}
-            <div className="my-10 flex flex-col md:flex-row justify-center gap-6 ">
-                <div className={`p-6 backdrop-blur-md rounded-xl bg-[#${team_colors[mostExpensive.sold_to_team_id - 1]}] shadow-lg`}>
+            <div className="my-10 flex flex-col md:flex-row justify-center gap-6">
+                <div className={`p-6 backdrop-blur-md rounded-xl bg-[#${team_colors[mostExpensive.sold_to_team_id - 1]}] shadow-lg w-full md:w-1/2`}>
                     <h2 className="text-xl font-semibold text-center">💰 Most Expensive Player</h2>
                     {mostExpensive.player_name ? (
-                        <div className="flex items-center p-4 rounded-lg">
+                        <div className="flex items-center p-4 rounded-lg flex-col md:flex-row">
                             {/* Player Image */}
                             <div className="flex-shrink-0 w-20 h-20 rounded-full overflow-hidden mr-4">
                                 <img src={mostExpensive.player_image} alt={mostExpensive.player_name} className="w-full h-full object-cover" />
                             </div>
                             {/* Player Details */}
-                            <div className="flex-grow text-white">
+                            <div className="flex-grow text-white text-center md:text-left">
                                 <h3 className="text-2xl font-bold">{mostExpensive.player_name}</h3>
                                 <p className="text-lg">Final Price: ₹{formatPriceInLakhs(mostExpensive.final_price)}</p>
                             </div>
@@ -52,16 +82,15 @@ const AuctionDashboard = () => {
                     )}
                 </div>
                 {lastSold && (
-                    <div className={`p-6 backdrop-blur-md rounded-xl bg-[#${team_colors[lastSold.sold_to_team_id - 1]}] shadow-lg`}>
+                    <div className={`p-6 backdrop-blur-md rounded-xl bg-[#${team_colors[lastSold.sold_to_team_id - 1]}] shadow-lg w-full md:w-1/2`}>
                         <h2 className="text-xl font-semibold text-center">📢 Last Sold Player</h2>
-
-                        <div className="flex items-center p-4 rounded-lg">
+                        <div className="flex items-center p-4 rounded-lg flex-col md:flex-row">
                             {/* Player Image */}
                             <div className="flex-shrink-0 w-20 h-20 rounded-full overflow-hidden mr-4">
                                 <img src={lastSold.player_image} alt={lastSold.player_name} className="w-full h-full object-cover" />
                             </div>
                             {/* Player Details */}
-                            <div className="flex-grow text-white">
+                            <div className="flex-grow text-white text-center md:text-left">
                                 <h3 className="text-2xl font-bold">{lastSold.player_name}</h3>
                                 <p className="text-lg">Final Price: ₹{formatPriceInLakhs(lastSold.final_price)}</p>
                             </div>
@@ -74,11 +103,10 @@ const AuctionDashboard = () => {
                 )}
             </div>
 
-
             {/* Teams Section */}
             <h1 className="text-3xl font-bold text-center">Teams</h1>
             <h1 className="text-center mb-4">Click to view the squad</h1>
-            <div className="grid grid-cols-5 px-5 gap-4 justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 px-5 gap-4 justify-center">
                 {teams.map((team) => (
                     <div
                         key={team.id}
@@ -90,26 +118,30 @@ const AuctionDashboard = () => {
                             alt={team.team_name}
                             className="w-16 h-16 mx-auto"
                         />
-                        <h2 className="text-xl font-semibold">{team.team_name}</h2>
-                        <p className="text-gray-300">Purse: ₹{formatPriceInLakhs(team.purse)} Cr</p>
+                        <h2 className="text-xl font-semibold text-center">{team.team_name}</h2>
+                        <p className="text-gray-300 text-center">Purse: ₹{formatPriceInLakhs(team.purse)} Cr</p>
                     </div>
                 ))}
             </div>
 
-
             {/* Modal for displaying players bought by the team */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-                    <div className="bg-gray-900/50 backdrop-blur-md  p-6 rounded-xl w-1/2">
-                        <h2 className="text-xl font-semibold mb-4">
-                            Players Bought by {teamPlayers[0]?.sold_to_team?.team_name || "Team"}
-                        </h2>
-                        <button
-                            onClick={() => setShowModal(false)}
-                            className="text-sm text-red-500 mb-4"
-                        >
-                            Close
-                        </button>
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-center p-4">
+                    <div className="bg-gray-900/50 backdrop-blur-md p-6 rounded-xl w-full md:w-1/2 max-h-[80vh] overflow-y-auto">
+                        {/* Modal Header */}
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold">
+                                Players Bought by {teamPlayers[0]?.sold_to_team?.team_name || "Team"}
+                            </h2>
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="text-sm text-red-500 hover:text-red-600"
+                            >
+                                Close
+                            </button>
+                        </div>
+
+                        {/* Modal Content */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {teamPlayers.map((player) => (
                                 <PlayerCard key={player.id} player={player} />
