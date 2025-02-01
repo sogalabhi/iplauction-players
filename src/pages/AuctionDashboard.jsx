@@ -119,7 +119,7 @@ const AuctionDashboard = () => {
                             className="w-16 h-16 mx-auto"
                         />
                         <h2 className="text-xl font-semibold text-center">{team.team_name}</h2>
-                        <p className="text-gray-300 text-center">Purse: ₹{formatPriceInLakhs(team.purse)} Cr</p>
+                        <p className="text-gray-300 text-center">Purse: ₹{formatPriceInLakhs(team.purse)}</p>
                     </div>
                 ))}
             </div>
