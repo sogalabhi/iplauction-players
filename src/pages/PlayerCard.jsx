@@ -1,4 +1,5 @@
 import { Card, CardContent } from "../components/card";
+import { formatPriceInLakhs } from "../lib/lakhstocr";
 
 const PlayerCard = ({ player }) => {
   return (
@@ -7,7 +8,7 @@ const PlayerCard = ({ player }) => {
         <img src={player.player_image} alt={player.player_name} className="w-16 h-16 mx-auto rounded-full" />
         <h3 className="text-xl font-semibold text-center">{player.player_name}</h3>
         <p className="text-gray-300 text-center">Role: {player.category}</p>
-        <p className="text-lg font-bold text-center">₹{player.final_price} Cr</p>
+        <p className="text-lg font-bold text-center">₹ {formatPriceInLakhs(player.final_price)}</p>
       </CardContent>
     </Card>
   );
